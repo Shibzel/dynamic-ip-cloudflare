@@ -6,9 +6,6 @@ from dotenv import load_dotenv
 import requests
 
 
-logging.basicConfig(level=logging.INFO,
-                    format='%(asctime)s - %(levelname)s - %(message)s')
-
 load_dotenv()
 
 EMAIL = os.getenv("EMAIL")
@@ -58,6 +55,8 @@ def update_dns_record(new_ip: str, email: str, token: str, zone_id: str, dns_rec
  
 
 if __name__ == '__main__':
+    logging.basicConfig(level=logging.INFO,
+        format='%(asctime)s - %(levelname)s - %(message)s')
     logging.info("Starting update loop.")
     last_ip = None
     while True:
