@@ -6,13 +6,6 @@ from dotenv import load_dotenv
 import requests
 
 
-load_dotenv()
-
-EMAIL = os.getenv("EMAIL")
-TOKEN = os.getenv("TOKEN")
-ZONE_ID = os.getenv("ZONE_ID")
-DNS_RECORD_ID = os.getenv("DNS_RECORD_ID")
-
 class FailedDNSRecordUpdate(Exception):
     def __init__(self, result: dict):
         errors = result["errors"]
@@ -55,6 +48,17 @@ def update_dns_record(new_ip: str, email: str, token: str, zone_id: str, dns_rec
  
 
 if __name__ == '__main__':
+    load_dotenv()
+
+    EMAIL = os.getenv("EMAIL")
+    TOKEN = os.getenv("TOKEN")
+    ZONE_ID = os.getenv("ZONE_ID")
+    DNS_RECORD_ID = os.getenv("DNS_RECORD_ID")
+
+    env_variables = (EMAIL, TOKEN, ZONE_ID, DNS_RECORD_ID)
+    if None in env_variables:
+        raise EnvironmentError("Environment variables are missing.")
+
     logging.basicConfig(level=logging.INFO,
         format='%(asctime)s - %(levelname)s - %(message)s')
     logging.info("Starting update loop.")
@@ -67,5 +71,5 @@ if __name__ == '__main__':
             logging.info(f"DNS record for {DNS_RECORD_ID} updated successfully. New IP: {new_ip}")
             last_ip = new_ip
         except Exception:
-            logging.exception(f"An error occured:", exc_info=True)
+            logging.exception(f"An error occurred:", exc_info=True)
         time.sleep(300)
